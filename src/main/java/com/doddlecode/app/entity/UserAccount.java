@@ -1,12 +1,25 @@
 package com.doddlecode.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user_account")
-public class UserAccount implements Serializable {
+@Scope("session")
+public class UserAccount implements UserDetails {
+    public static enum Role { USER }
 
     private static final long serialVersionUID = 1L;
 
@@ -26,8 +39,8 @@ public class UserAccount implements Serializable {
         this.userId = userId;
     }
 
-    @Basic
-    @Column(name = "username")
+    @Basic(optional = true)
+    @Column(name = "username", unique = true)
     public String getUsername() {
         return username;
     }
@@ -36,8 +49,9 @@ public class UserAccount implements Serializable {
         this.username = username;
     }
 
-    @Basic
+    @Basic(optional = true)
     @Column(name = "password")
+    @JsonProperty(access = Access.WRITE_ONLY)
     public String getPassword() {
         return password;
     }
@@ -46,7 +60,7 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
-    @Basic
+    @Basic(optional = true)
     @Column(name = "role")
     public String getRole() {
         return role;
@@ -71,5 +85,57 @@ public class UserAccount implements Serializable {
     public int hashCode() {
 
         return Objects.hash(userId, username, password, role);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role));
+
+        return authorities;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> auth) {
+        getAuthorities();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public void setAccountNonExpired(boolean is) {
+        this.isAccountNonExpired();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public void setAccountNonLocked(boolean is) {
+        this.isAccountNonLocked();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public void setCredentialsNonExpired(boolean isCredentialsNonExpiired) {
+        this.isCredentialsNonExpired();
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled();
     }
 }
