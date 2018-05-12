@@ -1,5 +1,6 @@
 package com.doddlecode.app.controller;
 
+import com.doddlecode.app.entity.UserAccount;
 import com.doddlecode.app.service.UserService;
 import com.doddlecode.app.util.CustomErrorType;
 import org.slf4j.Logger;
@@ -32,9 +33,7 @@ public class AccountController {
 
         }
 
-        //newUser.setRole("USER");
-
-        return new ResponseEntity<UserAccount>(userService.update(newUser), HttpStatus.OK);
+        return new ResponseEntity<>(userService.update(newUser), HttpStatus.CREATED);
     }
 
     @CrossOrigin
