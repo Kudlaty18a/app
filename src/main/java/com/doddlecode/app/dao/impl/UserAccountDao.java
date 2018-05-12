@@ -2,7 +2,6 @@ package com.doddlecode.app.dao.impl;
 
 import com.doddlecode.app.dao.AbstractDao;
 import com.doddlecode.app.dao.IUserAccountDao;
-import com.doddlecode.app.entity.UserAccount;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
