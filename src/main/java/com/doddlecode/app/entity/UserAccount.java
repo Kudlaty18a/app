@@ -3,21 +3,24 @@ package com.doddlecode.app.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "user_account")
+@Table(name = "user_account", schema = "public", catalog = "login")
 public class UserAccount implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    private int userId;
-    private String username;
-    private String password;
-    private String role;
-
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
+    @Basic
+    @Column(name = "username", nullable = true, length = 255)
+    private String username;
+    @Basic
+    @Column(name = "password", nullable = true, length = 255)
+    private String password;
+    @ManyToMany(mappedBy = "users")
+    private Set<Role> roles;
+
     public int getUserId() {
         return userId;
     }
@@ -26,8 +29,6 @@ public class UserAccount implements Serializable {
         this.userId = userId;
     }
 
-    @Basic
-    @Column(name = "username")
     public String getUsername() {
         return username;
     }
@@ -36,24 +37,12 @@ public class UserAccount implements Serializable {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "password")
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Basic
-    @Column(name = "role")
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     @Override
@@ -63,13 +52,20 @@ public class UserAccount implements Serializable {
         UserAccount that = (UserAccount) o;
         return userId == that.userId &&
                 Objects.equals(username, that.username) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(role, that.role);
+                Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(userId, username, password, role);
+        return Objects.hash(userId, username, password);
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
