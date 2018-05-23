@@ -33,7 +33,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "/users/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
@@ -52,6 +52,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
+        configuration.applyPermitDefaultValues();
+        configuration.addExposedHeader(TokenAuthenticationService.HEADER_STRING);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

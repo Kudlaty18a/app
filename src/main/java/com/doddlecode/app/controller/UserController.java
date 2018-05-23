@@ -1,7 +1,9 @@
 package com.doddlecode.app.controller;
 
 import com.doddlecode.app.dao.impl.UserAccountDao;
+import com.doddlecode.app.entity.Role;
 import com.doddlecode.app.entity.UserAccount;
+import com.doddlecode.app.service.RegistrationService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,23 +11,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserAccountDao userAccountDao;
+    private RegistrationService registrationService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(UserAccountDao userAccountDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userAccountDao = userAccountDao;
+    public UserController(RegistrationService registrationService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.registrationService = registrationService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/register")
     public void signUp(@RequestBody UserAccount user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userAccountDao.save(user);
+
+        registrationService.saveUser(user);
     }
 
-    @RequestMapping("/users")
-    public @ResponseBody String getUsers() {
-        return "{\"users\":[{\"firstname\":\"Richard\", \"lastname\":\"Feynman\"}," +
-                "{\"firstname\":\"Marie\",\"lastname\":\"Curie\"}]}";
-    }
 }

@@ -1,11 +1,13 @@
 package com.doddlecode.app.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Role {
+@Table(name = "role", schema = "public", catalog = "login")
+public class Role implements Serializable {
     @Id
     @Column(name = "role_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
